@@ -92,7 +92,7 @@ def train_dqn(model, options, resume):
         model.store_transition(o, action, r, terminal)
     # start training
     for episode in xrange(options.max_episode):
-        model.timeStep = 0
+        model.time_step = 0
         model.set_train()
         total_reward = 0.
         # begin an episode!
@@ -100,7 +100,7 @@ def train_dqn(model, options, resume):
             optimizer.zero_grad()
             action = model.get_action()
             o_next, r, terminal = flappyBird.frame_step(action)
-            total_reward += options.gamma**model.timeStep * r
+            total_reward += options.gamma**model.time_step * r
             o_next = preprocess(o_next)
             model.store_transition(o_next, action, r, terminal)
             model.increase_time_step()

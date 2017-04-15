@@ -107,7 +107,7 @@ class BrainDQN(nn.Module):
 		   reward: reward, r_t
 		   terminal: terminal(\fan_{t+1})
 		"""
-		next_state = np.append(self.currentState[1:,:,:], o_next.reshape((1,)+o_next.shape), axis=0)
+		next_state = np.append(self.current_state[1:,:,:], o_next.reshape((1,)+o_next.shape), axis=0)
 		self.replay_memory.append((self.current_state, action, reward, next_state, terminal))
 		if len(self.replay_memory) > self.mem_size:
 			self.replay_memory.popleft()

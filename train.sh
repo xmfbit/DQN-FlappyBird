@@ -6,9 +6,9 @@ initial_epsilon=1.
 final_epsilon=0.1
 observation=100
 exploration=10000
-max_episode=20000
+max_episode=50000
 # for fine tuning, uncomment this
-weight=model_best.pth.tar
+#weight=model_best.pth.tar
 
 python main.py --train\
                --cuda\
@@ -20,6 +20,6 @@ python main.py --train\
                --final_e=$final_epsilon\
                --observation=$observation\
                --exploration=$exploration\
-               --max_episode=$max_episode\
-               --weight=$weight   # for fine tuning, uncomment this
+               --max_episode=$max_episode
+               #--weight=$weight   # for fine tuning, uncomment this
 

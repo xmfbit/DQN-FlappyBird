@@ -4,7 +4,7 @@ DQN is a technology to realize reinforcement learning, first proposed by Deep Mi
 
 This demo is about using DQN to train a convolutional neural network to play flappy bird game. It is a practice when I learned reinforcement learning and partly reused [songrotek's code](https://github.com/songrotek/DRL-FlappyBird), especially the game engine and basic idea. Thanks for sharing, thanks to the spirit and community of open source.
 
-A video of the demo can be found on YouTube and Youku.
+A video of the demo can be found on [YouTube](https://youtu.be/h4jEdF_roXU).
 
 ### DQN implemented by PyTorch
 

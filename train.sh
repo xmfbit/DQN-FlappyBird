@@ -20,5 +20,5 @@ python main.py --train\
                --observation=$observation\
                --exploration=$exploration\
                --max_episode=$max_episode\
-               #--weight=$weight\   # for fine tuning, uncomment this
+               #--weight=$weight   # for fine tuning, uncomment this
 

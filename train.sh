@@ -8,9 +8,10 @@ observation=100
 exploration=10000
 max_episode=20000
 # for fine tuning, uncomment this
-# weight=model_best.pth.tar
+weight=model_best.pth.tar
 
 python main.py --train\
+               --cuda\
                --lr=$lr\
                --gamma=$gamma\
                --batch_size=$batch_size\
@@ -20,5 +21,5 @@ python main.py --train\
                --observation=$observation\
                --exploration=$exploration\
                --max_episode=$max_episode\
-               #--weight=$weight   # for fine tuning, uncomment this
+               --weight=$weight   # for fine tuning, uncomment this
 

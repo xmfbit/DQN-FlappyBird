@@ -18,10 +18,12 @@ class BrainDQN(nn.Module):
 	empty_frame = np.zeros((128, 72), dtype=np.float32)
 	empty_state = np.stack((empty_frame, empty_frame, empty_frame, empty_frame), axis=0)
 
-	def __init__(self, epsilon, mem_size):
+	def __init__(self, epsilon, mem_size, cuda):
 		"""Initialization
 
 		   epsilon: initial epsilon for exploration
+                   mem_size: memory size for experience replay
+                   cuda: use cuda or not
 		"""
 		super(BrainDQN, self).__init__()
 		self.train = None
@@ -32,6 +34,7 @@ class BrainDQN(nn.Module):
 		self.epsilon = epsilon
 		self.actions = ACTIONS
 		self.mem_size = mem_size
+                self.use_cuda = cuda
 		# init Q network
 		self.createQNetwork()
 
@@ -127,6 +130,8 @@ class BrainDQN(nn.Module):
 		"""
 		state = self.currentState
 		state_var = Variable(torch.from_numpy(state), volatile=True).unsqueeze(0)
+                if self.use_cuda:
+                    state_var = state_var.cuda()
 		q_value = self.forward(state_var)
 		_, action_index = torch.max(q_value, dim=1)
 		action_index = action_index.data[0][0]

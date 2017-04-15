@@ -74,6 +74,8 @@ def train_dqn(model, options, resume):
     o = preprocess(o)
     model.set_initial_state()
 
+    if options.cuda:
+        model = model.cuda()
     # in the first `OBSERVE` time steos, we dont train the model
     for i in xrange(options.observation):
         action = model.get_action_randomly()
@@ -104,6 +106,9 @@ def train_dqn(model, options, resume):
             state_batch_var = Variable(torch.from_numpy(state_batch))
             nextState_batch_var = Variable(torch.from_numpy(nextState_batch),
                                            volatile=True)
+            if options.cuda:
+                state_batch_var = state_batch_var.cuda()
+                nextState_batch_var = nextState_batch_var.cuda()
             # Step 2: calculate y
             q_value_next = model.forward(nextState_batch_var)
 
@@ -118,6 +123,9 @@ def train_dqn(model, options, resume):
 
             y = Variable(torch.from_numpy(y))
             action_batch_var = Variable(torch.from_numpy(action_batch))
+            if options.cuda:
+                y = y.cuda()
+                action_batch_var = action_batch_var.cuda()
             q_value = torch.sum(torch.mul(action_batch_var, q_value), dim=1)
 
             loss = ceriterion(q_value, y)
@@ -186,7 +194,7 @@ def test_dqn(model, episode):
     return ave_time
 
 
-def play_game(model_file_name, best=True):
+def play_game(model_file_name, cuda=False, best=True):
     """Play flappy bird with pretrained dqn model
 
        weight -- model file name containing weight of dqn
@@ -204,13 +212,14 @@ def play_game(model_file_name, best=True):
         print 'time step is {}'.format(time_step)
     epsilon = checkpoint['epsilon']
     print 'epsilon = {:.5f}'.format(epsilon)
-    model = BrainDQN(epsilon=epsilon, mem_size=0)
+    model = BrainDQN(epsilon=epsilon, mem_size=0, cuda=cuda)
     model.load_state_dict(checkpoint['state_dict'])
 
     model.set_eval()
     bird_game = game.GameState()
     model.set_initial_state()
-
+    if cuda:
+        model = model.cuda()
     while True:
         action = model.get_optim_action()
         o, r, terminal = bird_game.frame_step(action)

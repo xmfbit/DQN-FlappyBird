@@ -11,6 +11,7 @@ max_episode=2000
 weight=model_best.pth.tar
 
 python main.py --train\
+               --cuda\
                --lr=$lr\
                --gamma=$gamma\
                --batch_size=$batch_size\

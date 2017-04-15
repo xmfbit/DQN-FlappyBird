@@ -105,19 +105,19 @@ def train_dqn(model, options, resume):
             model.store_transition(o_next, action, r, terminal)
             model.increase_time_step()
             # Step 1: obtain random minibatch from replay memory
-            minibatch = random.sample(model.replayMemory, options.batch_size)
+            minibatch = random.sample(model.replay_memory, options.batch_size)
             state_batch = np.array([data[0] for data in minibatch])
             action_batch = np.array([data[1] for data in minibatch])
             reward_batch = np.array([data[2] for data in minibatch])
-            nextState_batch = np.array([data[3] for data in minibatch])
+            next_state_batch = np.array([data[3] for data in minibatch])
             state_batch_var = Variable(torch.from_numpy(state_batch))
-            nextState_batch_var = Variable(torch.from_numpy(nextState_batch),
+            next_state_batch_var = Variable(torch.from_numpy(next_state_batch),
                                            volatile=True)
             if options.cuda:
                 state_batch_var = state_batch_var.cuda()
-                nextState_batch_var = nextState_batch_var.cuda()
+                next_state_batch_var = next_state_batch_var.cuda()
             # Step 2: calculate y
-            q_value_next = model.forward(nextState_batch_var)
+            q_value_next = model.forward(next_state_batch_var)
 
             q_value = model.forward(state_batch_var)
 
@@ -144,7 +144,7 @@ def train_dqn(model, options, resume):
                 break
 
         print 'episode: {}, epsilon: {:.4f}, max time step: {}, total reward: {:.6f}'.format(
-                episode, model.epsilon, model.timeStep, total_reward)
+                episode, model.epsilon, model.time_step, total_reward)
 
         if model.epsilon > options.final_e:
             delta = (options.init_e - options.final_e)/options.exploration
@@ -182,7 +182,7 @@ def test_dqn(model, episode):
     model.set_eval()
     ave_time = 0.
     for test_case in xrange(5):
-        model.timeStep = 0
+        model.time_step = 0
         flappyBird = game.GameState()
         o, r, terminal = flappyBird.frame_step([1, 0])
         o = preprocess(o)
@@ -193,9 +193,9 @@ def test_dqn(model, episode):
             if terminal:
                 break
             o = preprocess(o)
-            model.currentState = np.append(model.currentState[1:,:,:], o.reshape((1,)+o.shape), axis=0)
+            model.current_state = np.append(model.current_state[1:,:,:], o.reshape((1,)+o.shape), axis=0)
             model.increase_time_step()
-        ave_time += model.timeStep
+        ave_time += model.time_step
     ave_time /= 5
     print 'testing: episode: {}, average time: {}'.format(episode, ave_time)
     return ave_time
@@ -209,7 +209,7 @@ def play_game(model_file_name, cuda=False, best=True):
     """
     print 'load pretrained model file: ' + model_file_name
     model = BrainDQN(epsilon=0., mem_size=0, cuda=cuda)
-    episode, epsilon, time_step = load_checkpoint(model_file_name, model)
+    load_checkpoint(model_file_name, model)
 
     model.set_eval()
     bird_game = game.GameState()
@@ -223,7 +223,7 @@ def play_game(model_file_name, cuda=False, best=True):
             break
         o = preprocess(o)
 
-        model.currentState = np.append(model.currentState[1:,:,:], o.reshape((1,)+o.shape), axis=0)
+        model.current_state = np.append(model.current_state[1:,:,:], o.reshape((1,)+o.shape), axis=0)
 
         model.increase_time_step()
-    print 'total time step is {}'.format(model.timeStep)
+    print 'total time step is {}'.format(model.time_step)

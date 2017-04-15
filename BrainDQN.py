@@ -28,9 +28,9 @@ class BrainDQN(nn.Module):
 		super(BrainDQN, self).__init__()
 		self.train = None
 		# init replay memory
-		self.replayMemory = deque()
+		self.replay_memory = deque()
 		# init some parameters
-		self.timeStep = 0
+		self.time_step = 0
 		self.epsilon = epsilon
 		self.actions = ACTIONS
 		self.mem_size = mem_size
@@ -84,7 +84,7 @@ class BrainDQN(nn.Module):
 		self.train = True
 
 	def set_eval(self):
-		"""Set phase eval
+		"""Set phase EVALUATION
 		"""
 		self.train = False
 
@@ -94,9 +94,9 @@ class BrainDQN(nn.Module):
 		   state: initial state. if None, use `BrainDQN.empty_state`
 		"""
 		if state is None:
-			self.currentState = BrainDQN.empty_state
+			self.current_state = BrainDQN.empty_state
 		else:
-			self.currentState = state
+			self.current_state = state
 
 
 	def store_transition(self, o_next, action, reward, terminal):
@@ -108,11 +108,11 @@ class BrainDQN(nn.Module):
 		   terminal: terminal(\fan_{t+1})
 		"""
 		next_state = np.append(self.currentState[1:,:,:], o_next.reshape((1,)+o_next.shape), axis=0)
-		self.replayMemory.append((self.currentState, action, reward, next_state, terminal))
-		if len(self.replayMemory) > self.mem_size:
-			self.replayMemory.popleft()
+		self.replay_memory.append((self.current_state, action, reward, next_state, terminal))
+		if len(self.replay_memory) > self.mem_size:
+			self.replay_memory.popleft()
 		if not terminal:
-			self.currentState = next_state
+			self.current_state = next_state
 		else:
 			self.set_initial_state()
 
@@ -128,7 +128,7 @@ class BrainDQN(nn.Module):
 	def get_optim_action(self):
 		"""Get optimal action based on current state
 		"""
-		state = self.currentState
+		state = self.current_state
 		state_var = Variable(torch.from_numpy(state), volatile=True).unsqueeze(0)
                 if self.use_cuda:
                     state_var = state_var.cuda()
@@ -148,4 +148,4 @@ class BrainDQN(nn.Module):
 
 	def increase_time_step(self, time_step=1):
 		"""increase time step"""
-		self.timeStep += time_step
+		self.time_step += time_step

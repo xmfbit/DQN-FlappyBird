@@ -5,8 +5,8 @@ mem_size=5000
 initial_epsilon=1.
 final_epsilon=0.1
 observation=100
-exploration=10000
-max_episode=50000
+exploration=50000
+max_episode=100000
 # for fine tuning, uncomment this
 #weight=model_best.pth.tar
 

@@ -36,7 +36,9 @@ Some tips for training:
 
 - Do not set `memory_size` too large(or too small). It depends on available memory in your computer.   
 
-- I finetuned the model several times and change `epsilon` of ϵ-greedy exploration manually every time.
+- It takes a long time to complete training. I finetuned the model several times and change `epsilon` of ϵ-greedy exploration manually every time.
+
+- When choose action randomly in training, I prefer to 'DO Nothing' compared to 'UP'. I think it can accelarate convergence. See `get_action_randomly` method in `BrainDQN.py` for detail.
 
 ### Disclaimer
 

@@ -121,7 +121,7 @@ class BrainDQN(nn.Module):
 		"""
 		action = np.zeros(self.actions, dtype=np.float32)
 		#action_index = random.randrange(self.actions)
-		action_index = 0 if random.random() < 0.5 else 1
+		action_index = 0 if random.random() < 0.8 else 1
 		action[action_index] = 1
 		return action
 
